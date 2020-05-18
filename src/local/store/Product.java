@@ -8,20 +8,21 @@ public abstract class Product implements Purchasable {
 
     protected final int ID;
     protected String name;
-    protected int price;
+    protected double price;
     protected ProductType type;
     protected Calendar dateRelease;
 
 
-    public Product(ProductType type, String name, int price, Calendar date) {
-        ID = getCount() + 1;
+    public Product(ProductType type, String name, double price, Calendar date) {
+        count += 1;
+        ID = getCount();
         this.type = type;
         this.name = name;
         this.price = price;
         dateRelease = date;
     }
 
-    public Product(ProductType type, String name, int price) {
+    public Product(ProductType type, String name, double price) {
         this(type, name, price, Calendar.getInstance());
     }
 
