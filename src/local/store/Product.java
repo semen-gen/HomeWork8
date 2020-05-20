@@ -30,6 +30,10 @@ public abstract class Product implements Purchasable {
         return count;
     }
 
+    public int getID() {
+        return ID;
+    }
+
     @Override
     public String toString() {
         return ID + ". " + name + " цена: " + price + " руб.";
