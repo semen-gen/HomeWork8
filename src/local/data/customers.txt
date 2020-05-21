@@ -1,0 +1,3 @@
+ivan,qwerty,1000
+semen,123456,500
+olga,zxcvb,5000
