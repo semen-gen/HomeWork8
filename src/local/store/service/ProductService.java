@@ -61,8 +61,6 @@ public class ProductService {
                     while ((line = br.readLine()) != null) {
                         data.add(line);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         } catch (IOException e) {
