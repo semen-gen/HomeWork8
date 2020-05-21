@@ -1,4 +1,4 @@
-package local.cutomers;
+package local.cutomers.model;
 
 import java.util.*;
 

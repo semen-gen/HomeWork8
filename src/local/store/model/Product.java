@@ -1,4 +1,6 @@
-package local.store;
+package local.store.model;
+
+import local.store.*;
 
 import java.util.*;
 

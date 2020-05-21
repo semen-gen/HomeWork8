@@ -1,4 +1,6 @@
-package local.store;
+package local.store.model;
+
+import local.store.ProductType;
 
 public class Food extends Product {
 
