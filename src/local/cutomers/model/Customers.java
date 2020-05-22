@@ -28,4 +28,8 @@ public class Customers {
         this.cash = cash;
     }
 
+    public String getLogin() {
+        return LOGIN;
+    }
+
 }

@@ -8,15 +8,15 @@ import java.util.*;
 public class CustomerService {
 
     private final File FILE;
-    private LinkedList<Customers> customers;
+    private HashMap<String, Customers> customers;
 
     public CustomerService(String file) {
         FILE = new File(file);
     }
 
-    public LinkedList<Customers> getCustomers() {
+    public HashMap<String, Customers> getCustomers() {
         if (customers == null) {
-            customers = new LinkedList<>();
+            customers = new HashMap<>();
             ArrayList<String> data = getFileData();
             Customers customer;
             String[] temp;
@@ -24,7 +24,7 @@ public class CustomerService {
             for (String item : data) {
                 temp = item.split(",");
                 customer = new Customers(temp[0], temp[1], new Integer(temp[2]));
-                customers.push(customer);
+                customers.put(customer.getLogin(), customer);
             }
         }
         return customers;
@@ -52,15 +52,27 @@ public class CustomerService {
         return data;
     }
 
-    public void login(Scanner scanner) {
+    public Customers login(Scanner scanner) {
         System.out.println("Авторизация");
         System.out.println("===========");
         System.out.println("Введите логин:");
         String login = scanner.next();
         System.out.println("Введите пароль:");
         String pass = scanner.next();
-        System.out.println(login + " " + pass);
-        // Авторизация пользователя
+        HashMap<String, Customers> customersColl = getCustomers();
+        Customers customer = null;
+        if (customersColl.containsKey(login)) {
+            customer = customersColl.get(login);
+            if (!customer.checkPassword(pass)) {
+                System.out.println("Неверные логин или пароль");
+                login(scanner);
+            }
+        }
+        else {
+            System.out.println("Неверные логин или пароль");
+            login(scanner);
+        }
+        return customer;
     }
 
 }
