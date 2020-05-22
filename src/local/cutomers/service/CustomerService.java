@@ -52,4 +52,15 @@ public class CustomerService {
         return data;
     }
 
+    public void login(Scanner scanner) {
+        System.out.println("Авторизация");
+        System.out.println("===========");
+        System.out.println("Введите логин:");
+        String login = scanner.next();
+        System.out.println("Введите пароль:");
+        String pass = scanner.next();
+        System.out.println(login + " " + pass);
+        // Авторизация пользователя
+    }
+
 }
