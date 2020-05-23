@@ -2,6 +2,7 @@ package local.menu.service;
 
 import local.cutomers.model.Customer;
 import local.cutomers.service.CustomerService;
+import local.order.model.Order;
 import local.store.ProductType;
 import local.store.model.Product;
 import local.store.service.ProductService;
@@ -16,10 +17,11 @@ public class MenuService {
     private final Scanner SCANNER;
     private final CustomerService CS;
     private final ProductService PS;
-    private Customer currentUser;
-
     private final String productFile;
     private final String customerFile;
+
+    private Customer currentUser;
+    private Order order;
 
     {
         customerFile = "src\\local\\data\\customers.txt";
@@ -107,6 +109,7 @@ public class MenuService {
                 login();
             }
             currentUser = customer;
+            order = new Order(currentUser);
         }
         else {
             System.out.println("Неверные логин или пароль");
@@ -115,26 +118,63 @@ public class MenuService {
     }
 
     private void purchaseMenu() {
-        while (SCANNER.hasNextLine()) {
-            printGreetingPurchase();
+        printGreetingPurchase();
+        SCANNER.skip("\\n");
+        while (SCANNER.hasNext()) {
             String result = SCANNER.nextLine();
 
-            HashMap<Integer, Product> allProducts, orderProducts;
-            allProducts = PS.getProducts();
-            orderProducts = new HashMap<>();
+            HashMap<Integer, Product> allProducts = PS.getProducts();
 
             Pattern p = Pattern.compile("(\\b\\d+\\b)+");
             Matcher matcher = p.matcher(result);
             Integer temp;
-            int i = 1;
+
             while (matcher.find()) {
                 temp = new Integer(matcher.group());
                 if (allProducts.containsKey(temp)) {
-                    orderProducts.put(i++, allProducts.get(temp));
+                    order.addItem(allProducts.get(temp));
                 }
             }
-            printProducts(orderProducts);
+            if (order.count() > 0) break;
+            else printGreetingPurchase();
+
         }
+        paymentMenu();
+    }
+
+    private void paymentMenu() {
+        printPaymentMenu();
+
+        while (SCANNER.hasNext()) {
+            if (SCANNER.hasNextInt()) {
+                int key = SCANNER.nextInt();
+
+                switch (key) {
+                    case 1:
+                        // реализовать логику оплаты и сохранения заказа
+                        break;
+                    case 2:
+                        storeMenu();
+                        break;
+                    default:
+                        System.out.println("Вы указали неправильный символ " + key);
+                        paymentMenu();
+                }
+            }
+            else {
+                System.out.println("Вы указали неправильный символ " + SCANNER.next());
+                printPaymentMenu();
+            }
+        }
+    }
+
+    private void printPaymentMenu() {
+        System.out.println("Товары в заказе:");
+        printProducts(order.getItems());
+        System.out.println();
+        System.out.println("Хотите продолжить покупки или оплатить?");
+        System.out.println("1. Оплатить");
+        System.out.println("2. Продолжить покупки");
     }
 
     private void printMainMenuItems() {
@@ -160,7 +200,7 @@ public class MenuService {
     private void printProducts(HashMap<Integer, Product> products) {
         products = products == null ? PS.getProducts() : products;
         for (HashMap.Entry<Integer, Product> item : products.entrySet()) {
-            System.out.println(item.getKey()+". "+item.getValue());
+            System.out.println(item.getKey() + ". " + item.getValue());
         }
     }
 
