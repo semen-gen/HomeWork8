@@ -1,22 +1,20 @@
 package local.menu.service;
 
-import local.cutomers.model.Customers;
+import local.cutomers.model.Customer;
 import local.cutomers.service.CustomerService;
 import local.store.ProductType;
 import local.store.model.Product;
 import local.store.service.ProductService;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Scanner;
 
 public class MenuService {
 
-    private Scanner scanner;
-    private CustomerService cs;
-    private ProductService ps;
-    private Customers currentUser;
+    private final Scanner SCANNER;
+    private final CustomerService CS;
+    private final ProductService PS;
+    private Customer currentUser;
 
     private final String productFile;
     private final String customerFile;
@@ -28,20 +26,20 @@ public class MenuService {
     }
 
     public MenuService() {
-        scanner = new Scanner(System.in);
-        cs = new CustomerService(customerFile);
-        ps = new ProductService(ProductType.FOOD, productFile);
+        SCANNER = new Scanner(System.in);
+        CS = new CustomerService(customerFile);
+        PS = new ProductService(ProductType.FOOD, productFile);
     }
 
     public void mainMenu() {
         printMainMenuItems();
         cycle:
         {
-            while (scanner.hasNext()) {
-                if (scanner.hasNextInt()) {
-                    switch (scanner.nextInt()) {
+            while (SCANNER.hasNext()) {
+                if (SCANNER.hasNextInt()) {
+                    switch (SCANNER.nextInt()) {
                         case 1:
-                            currentUser = cs.login(scanner);
+                            currentUser = CS.login(SCANNER);
                             storeMenu();
                             break;
                         case 2:
@@ -53,7 +51,7 @@ public class MenuService {
                     }
                 }
                 else {
-                    System.out.println("Недопустимые символы: " + scanner.next());
+                    System.out.println("Недопустимые символы: " + SCANNER.next());
                     mainMenu();
                 }
             }
@@ -65,9 +63,9 @@ public class MenuService {
         printStoreMenuItems();
         store:
         {
-            while (scanner.hasNext()) {
-                if (scanner.hasNextInt()) {
-                    switch (scanner.nextInt()) {
+            while (SCANNER.hasNext()) {
+                if (SCANNER.hasNextInt()) {
+                    switch (SCANNER.nextInt()) {
                         case 1:
                             printProducts();
                             break;
@@ -83,7 +81,7 @@ public class MenuService {
                     }
                 }
                 else {
-                    System.out.println("Недопустимые символы: " + scanner.next());
+                    System.out.println("Недопустимые символы: " + SCANNER.next());
                     storeMenu();
                 }
             }
@@ -107,13 +105,13 @@ public class MenuService {
     }
 
     private void printProducts() {
-        for (HashMap.Entry<Integer, Product> item : ps.getProducts().entrySet()) {
+        for (HashMap.Entry<Integer, Product> item : PS.getProducts().entrySet()) {
             System.out.println(item.getValue());
         }
     }
 
     private void exit() {
-        scanner.close();
+        SCANNER.close();
         System.exit(0);
     }
 
