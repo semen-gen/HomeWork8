@@ -38,7 +38,7 @@ public abstract class Product implements Purchasable {
 
     @Override
     public String toString() {
-        return ID + ". " + name + " цена: " + price + " руб.";
+        return /*ID + ". " +*/ name + " цена: " + price + " руб.";
     }
 
 }

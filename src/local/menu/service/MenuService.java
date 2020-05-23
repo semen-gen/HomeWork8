@@ -8,6 +8,8 @@ import local.store.service.ProductService;
 
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MenuService {
 
@@ -67,10 +69,10 @@ public class MenuService {
                 if (SCANNER.hasNextInt()) {
                     switch (SCANNER.nextInt()) {
                         case 1:
-                            printProducts();
+                            printProducts(null);
                             break;
                         case 2:
-                            // тут вызов метода покупки
+                            purchaseMenu();
                             break;
                         case 3:
                             break store;
@@ -112,6 +114,29 @@ public class MenuService {
         }
     }
 
+    private void purchaseMenu() {
+        while (SCANNER.hasNextLine()) {
+            printGreetingPurchase();
+            String result = SCANNER.nextLine();
+
+            HashMap<Integer, Product> allProducts, orderProducts;
+            allProducts = PS.getProducts();
+            orderProducts = new HashMap<>();
+
+            Pattern p = Pattern.compile("(\\b\\d+\\b)+");
+            Matcher matcher = p.matcher(result);
+            Integer temp;
+            int i = 1;
+            while (matcher.find()) {
+                temp = new Integer(matcher.group());
+                if (allProducts.containsKey(temp)) {
+                    orderProducts.put(i++, allProducts.get(temp));
+                }
+            }
+            printProducts(orderProducts);
+        }
+    }
+
     private void printMainMenuItems() {
         System.out.println("Главное меню");
         System.out.println("============");
@@ -127,9 +152,15 @@ public class MenuService {
         System.out.println("3. Выйти");
     }
 
-    private void printProducts() {
-        for (HashMap.Entry<Integer, Product> item : PS.getProducts().entrySet()) {
-            System.out.println(item.getValue());
+    public void printGreetingPurchase() {
+        System.out.println("Укажите номера товаров через пробел, если необходимо купить несколько одинаковых товаров," +
+                " просто повторите его номер нужное количество раз");
+    }
+
+    private void printProducts(HashMap<Integer, Product> products) {
+        products = products == null ? PS.getProducts() : products;
+        for (HashMap.Entry<Integer, Product> item : products.entrySet()) {
+            System.out.println(item.getKey()+". "+item.getValue());
         }
     }
 
