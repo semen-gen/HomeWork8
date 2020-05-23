@@ -39,7 +39,7 @@ public class MenuService {
                 if (SCANNER.hasNextInt()) {
                     switch (SCANNER.nextInt()) {
                         case 1:
-                            currentUser = CS.login(SCANNER);
+                            login();
                             storeMenu();
                             break;
                         case 2:
@@ -87,6 +87,29 @@ public class MenuService {
             }
         }
         exit();
+    }
+
+    private void login() {
+        System.out.println("Авторизация");
+        System.out.println("===========");
+        System.out.println("Введите логин:");
+        String login = SCANNER.next();
+        System.out.println("Введите пароль:");
+        String pass = SCANNER.next();
+        HashMap<String, Customer> customersColl = CS.getCustomers();
+        Customer customer;
+        if (customersColl.containsKey(login)) {
+            customer = customersColl.get(login);
+            if (!customer.checkPassword(pass)) {
+                System.out.println("Неверные логин или пароль");
+                login();
+            }
+            currentUser = customer;
+        }
+        else {
+            System.out.println("Неверные логин или пароль");
+            login();
+        }
     }
 
     private void printMainMenuItems() {

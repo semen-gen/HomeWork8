@@ -52,27 +52,4 @@ public class CustomerService {
         return data;
     }
 
-    public Customer login(Scanner scanner) {
-        System.out.println("Авторизация");
-        System.out.println("===========");
-        System.out.println("Введите логин:");
-        String login = scanner.next();
-        System.out.println("Введите пароль:");
-        String pass = scanner.next();
-        HashMap<String, Customer> customersColl = getCustomers();
-        Customer customer = null;
-        if (customersColl.containsKey(login)) {
-            customer = customersColl.get(login);
-            if (!customer.checkPassword(pass)) {
-                System.out.println("Неверные логин или пароль");
-                login(scanner);
-            }
-        }
-        else {
-            System.out.println("Неверные логин или пароль");
-            login(scanner);
-        }
-        return customer;
-    }
-
 }
