@@ -1,12 +1,12 @@
 package local.cutomers.model;
 
-public class Customers {
+public class Customer {
 
     private final String LOGIN;
     private final String PASSWORD;
     private int cash;
 
-    public Customers(String login, String password, int cash) {
+    public Customer(String login, String password, int cash) {
         LOGIN = login;
         PASSWORD = password;
         this.cash = cash;

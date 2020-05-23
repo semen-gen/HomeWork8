@@ -1,6 +1,6 @@
 package local.cutomers.service;
 
-import local.cutomers.model.Customers;
+import local.cutomers.model.Customer;
 
 import java.io.*;
 import java.util.*;
@@ -8,22 +8,22 @@ import java.util.*;
 public class CustomerService {
 
     private final File FILE;
-    private HashMap<String, Customers> customers;
+    private HashMap<String, Customer> customers;
 
     public CustomerService(String file) {
         FILE = new File(file);
     }
 
-    public HashMap<String, Customers> getCustomers() {
+    public HashMap<String, Customer> getCustomers() {
         if (customers == null) {
             customers = new HashMap<>();
             ArrayList<String> data = getFileData();
-            Customers customer;
+            Customer customer;
             String[] temp;
 
             for (String item : data) {
                 temp = item.split(",");
-                customer = new Customers(temp[0], temp[1], new Integer(temp[2]));
+                customer = new Customer(temp[0], temp[1], new Integer(temp[2]));
                 customers.put(customer.getLogin(), customer);
             }
         }
@@ -52,15 +52,15 @@ public class CustomerService {
         return data;
     }
 
-    public Customers login(Scanner scanner) {
+    public Customer login(Scanner scanner) {
         System.out.println("Авторизация");
         System.out.println("===========");
         System.out.println("Введите логин:");
         String login = scanner.next();
         System.out.println("Введите пароль:");
         String pass = scanner.next();
-        HashMap<String, Customers> customersColl = getCustomers();
-        Customers customer = null;
+        HashMap<String, Customer> customersColl = getCustomers();
+        Customer customer = null;
         if (customersColl.containsKey(login)) {
             customer = customersColl.get(login);
             if (!customer.checkPassword(pass)) {
