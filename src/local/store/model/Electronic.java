@@ -5,7 +5,7 @@ import local.store.ProductType;
 public class Electronic extends Product {
 
     public Electronic(String name, double price) {
-        super(ProductType.ELECTRONIC, name, price);
+        super(ProductType.ELECTRONICS, name, price);
     }
 
     @Override

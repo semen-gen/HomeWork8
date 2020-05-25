@@ -35,7 +35,7 @@ public class ProductService {
                     case ANIMALS:
                         product = new Animal(tmp[0], new Double(tmp[1]));
                         break;
-                    case ELECTRONIC:
+                    case ELECTRONICS:
                         product = new Electronic(tmp[0], new Double(tmp[1]));
                         break;
                     default:
@@ -68,6 +68,13 @@ public class ProductService {
         }
 
         return data;
+    }
+
+    public void printProducts(HashMap<Integer, Product> products) {
+        products = products == null ? getProducts() : products;
+        for (HashMap.Entry<Integer, Product> item : products.entrySet()) {
+            System.out.println(item.getKey() + ". " + item.getValue());
+        }
     }
 
 }

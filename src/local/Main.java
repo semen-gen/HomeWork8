@@ -1,6 +1,7 @@
 package local;
 
 import local.menu.model.Menu;
+import local.store.ProductType;
 
 public class Main {
 
@@ -11,7 +12,7 @@ public class Main {
 //        CustomerService cs = new CustomerService("src\\local\\data\\customers.txt");
 //        System.out.println(cs.getCustomers());
 
-        Menu menu = new Menu();
+        Menu menu = new Menu(ProductType.FOOD);
         menu.start();
 
     }

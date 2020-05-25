@@ -2,6 +2,7 @@ package local.menu.service;
 
 import local.cutomers.model.Customer;
 import local.cutomers.service.CustomerService;
+import local.menu.model.Menu;
 import local.order.model.Order;
 import local.store.ProductType;
 import local.store.model.Product;
@@ -14,10 +15,10 @@ import java.util.regex.Pattern;
 
 public class MenuService {
 
+    private final Menu MENU;
     private final Scanner SCANNER;
     private final CustomerService CS;
     private final ProductService PS;
-    private final String productFile;
     private final String customerFile;
 
     private Customer currentUser;
@@ -25,100 +26,91 @@ public class MenuService {
 
     {
         customerFile = "src\\local\\data\\customers.txt";
-        productFile = "src\\local\\data\\productsFood.txt";
-
     }
 
-    public MenuService() {
+    public MenuService(Menu menu, ProductType type) {
+        MENU = menu;
         SCANNER = new Scanner(System.in);
         CS = new CustomerService(customerFile);
-        PS = new ProductService(ProductType.FOOD, productFile);
+        PS = new ProductService(type, type.getProductFile());
     }
 
     public void mainMenu() {
-        printMainMenuItems();
         cycle:
         {
             while (SCANNER.hasNext()) {
                 if (SCANNER.hasNextInt()) {
                     switch (SCANNER.nextInt()) {
                         case 1:
-                            login();
-                            storeMenu();
+                            MENU.printLoginItems();
                             break;
                         case 2:
                             break cycle;
                         default:
                             System.out.println("Выбрано неверное действие");
-                            printMainMenuItems();
                             break;
                     }
                 }
                 else {
                     System.out.println("Недопустимые символы: " + SCANNER.next());
-                    mainMenu();
                 }
             }
         }
         exit();
     }
 
-    private void storeMenu() {
-        printStoreMenuItems();
+    public void login() {
+        while (true) {
+            System.out.println("Введите логин:");
+            String login = SCANNER.next();
+            System.out.println("Введите пароль:");
+            String pass = SCANNER.next();
+            HashMap<String, Customer> customersColl = CS.getCustomers();
+            Customer customer;
+            if (customersColl.containsKey(login)) {
+                customer = customersColl.get(login);
+                if (!customer.checkPassword(pass)) {
+                    System.out.println("Неверные логин или пароль");
+                    continue;
+                }
+                currentUser = customer;
+                order = new Order(currentUser);
+                MENU.printStoreItems();
+            }
+            else {
+                System.out.println("Неверные логин или пароль");
+            }
+        }
+    }
+
+    public void storeMenu() {
         store:
         {
             while (SCANNER.hasNext()) {
                 if (SCANNER.hasNextInt()) {
                     switch (SCANNER.nextInt()) {
                         case 1:
-                            printProducts(null);
+                            PS.printProducts(null);
                             break;
                         case 2:
-                            purchaseMenu();
+                            MENU.printGreetingPurchase();
                             break;
                         case 3:
                             break store;
                         default:
                             System.out.println("Выбрано неверное действие");
-                            printMainMenuItems();
                             break;
                     }
                 }
                 else {
                     System.out.println("Недопустимые символы: " + SCANNER.next());
-                    storeMenu();
                 }
             }
         }
         exit();
     }
 
-    private void login() {
-        System.out.println("Авторизация");
-        System.out.println("===========");
-        System.out.println("Введите логин:");
-        String login = SCANNER.next();
-        System.out.println("Введите пароль:");
-        String pass = SCANNER.next();
-        HashMap<String, Customer> customersColl = CS.getCustomers();
-        Customer customer;
-        if (customersColl.containsKey(login)) {
-            customer = customersColl.get(login);
-            if (!customer.checkPassword(pass)) {
-                System.out.println("Неверные логин или пароль");
-                login();
-            }
-            currentUser = customer;
-            order = new Order(currentUser);
-        }
-        else {
-            System.out.println("Неверные логин или пароль");
-            login();
-        }
-    }
-
-    private void purchaseMenu() {
-        printGreetingPurchase();
+    public void purchaseMenu() {
         SCANNER.skip("\\n");
         while (SCANNER.hasNext()) {
             String result = SCANNER.nextLine();
@@ -135,16 +127,12 @@ public class MenuService {
                     order.addItem(allProducts.get(temp));
                 }
             }
-            if (order.count() > 0) break;
-            else printGreetingPurchase();
-
+            if (order.count() > 0) MENU.printPaymentMenu(order, PS);
+            else System.out.println("Вы ввели неправильные данные");
         }
-        paymentMenu();
     }
 
-    private void paymentMenu() {
-        printPaymentMenu();
-
+    public void paymentMenu() {
         while (SCANNER.hasNext()) {
             if (SCANNER.hasNextInt()) {
                 int key = SCANNER.nextInt();
@@ -158,43 +146,12 @@ public class MenuService {
                         break;
                     default:
                         System.out.println("Вы указали неправильный символ " + key);
-                        paymentMenu();
                 }
             }
             else {
                 System.out.println("Вы указали неправильный символ " + SCANNER.next());
-                printPaymentMenu();
             }
         }
-    }
-
-    private void printPaymentMenu() {
-        System.out.println("Товары в заказе:");
-        printProducts(order.getItems());
-        System.out.println();
-        System.out.println("Хотите продолжить покупки или оплатить?");
-        System.out.println("1. Оплатить");
-        System.out.println("2. Продолжить покупки");
-    }
-
-    private void printMainMenuItems() {
-        System.out.println("Главное меню");
-        System.out.println("============");
-        System.out.println("1. Авторизоваться");
-        System.out.println("2. Выйти");
-    }
-
-    private void printStoreMenuItems() {
-        System.out.println("Меню магазина");
-        System.out.println("=============");
-        System.out.println("1. Список товара");
-        System.out.println("2. Совершить покупки");
-        System.out.println("3. Выйти");
-    }
-
-    public void printGreetingPurchase() {
-        System.out.println("Укажите номера товаров через пробел, если необходимо купить несколько одинаковых товаров," +
-                " просто повторите его номер нужное количество раз");
     }
 
     private void printProducts(HashMap<Integer, Product> products) {
