@@ -2,6 +2,7 @@ package local.menu.service;
 
 import local.cutomers.model.Customer;
 import local.cutomers.service.CustomerService;
+import local.exeptions.WrongProductID;
 import local.menu.model.Menu;
 import local.order.model.Order;
 import local.store.ProductType;
@@ -114,21 +115,9 @@ public class MenuService {
         SCANNER.skip("\\n");
         while (SCANNER.hasNext()) {
             String result = SCANNER.nextLine();
-
-            HashMap<Integer, Product> allProducts = PS.getProducts();
-
-            Pattern p = Pattern.compile("(\\b\\d+\\b)+");
-            Matcher matcher = p.matcher(result);
-            Integer temp;
-
-            while (matcher.find()) {
-                temp = new Integer(matcher.group());
-                if (allProducts.containsKey(temp)) {
-                    order.addItem(allProducts.get(temp));
-                }
-            }
+            checkIDForString(result);
+            checkIdForBad(result);
             if (order.count() > 0) MENU.printPaymentMenu(order, PS);
-            else System.out.println("Вы ввели неправильные данные");
         }
     }
 
@@ -142,7 +131,7 @@ public class MenuService {
                         // реализовать логику оплаты и сохранения заказа
                         break;
                     case 2:
-                        storeMenu();
+                        MENU.printGreetingPurchase();
                         break;
                     default:
                         System.out.println("Вы указали неправильный символ " + key);
@@ -154,10 +143,36 @@ public class MenuService {
         }
     }
 
-    private void printProducts(HashMap<Integer, Product> products) {
-        products = products == null ? PS.getProducts() : products;
-        for (HashMap.Entry<Integer, Product> item : products.entrySet()) {
-            System.out.println(item.getKey() + ". " + item.getValue());
+    private void checkIDForString(String result) {
+        Pattern notDecimals = Pattern.compile("\\b[^\\d\\s]\\w+\\b|\\b\\w+[^\\d\\s]\\b|\\b\\d+[^\\d\\s]+\\d+\\b");
+        Matcher matcher = notDecimals.matcher(result);
+        while (matcher.find()) {
+            try {
+                throw new WrongProductID(matcher.group());
+            } catch (WrongProductID wrongProductID) {
+                wrongProductID.printMessage();
+            }
+        }
+    }
+
+    private void checkIdForBad(String result) {
+        HashMap<Integer, Product> allProducts = PS.getProducts();
+        Pattern decimals = Pattern.compile("(\\b\\d+\\b)+");
+        Matcher matcher = decimals.matcher(result);
+        Integer temp;
+
+        while (matcher.find()) {
+            temp = new Integer(matcher.group());
+            if (allProducts.containsKey(temp)) {
+                order.addItem(allProducts.get(temp));
+            }
+            else {
+                try {
+                    throw new WrongProductID(temp);
+                } catch (WrongProductID wrongProductID) {
+                    wrongProductID.printMessage();
+                }
+            }
         }
     }
 
