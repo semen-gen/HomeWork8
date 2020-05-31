@@ -48,7 +48,7 @@ public class Menu {
 
     public void printOrderMenu(Order order, ProductService PS) {
         System.out.println("Товары в заказе:");
-        PS.printProducts(order.getItems());
+        PS.printProducts(order.getOrderItems());
         System.out.println();
         System.out.println("Хотите продолжить покупки или оплатить?");
         System.out.println("1. Оплатить");

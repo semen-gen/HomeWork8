@@ -2,6 +2,7 @@ package local.menu.service;
 
 import local.cutomers.model.Customer;
 import local.cutomers.service.CustomerService;
+import local.exeptions.PaymentErrors;
 import local.exeptions.WrongProductID;
 import local.menu.model.Menu;
 import local.order.model.Order;
@@ -129,8 +130,13 @@ public class MenuService {
 
                 switch (key) {
                     case 1:
-                        OrderService os = new OrderService(order, currentUser);
-                        os.tryPay();
+                        OrderService os = new OrderService(order);
+                        try {
+                            os.tryPay();
+                        } catch (PaymentErrors paymentErrors) {
+                            paymentErrors.printMessage();
+                        }
+                        MENU.printStoreItems();
                         break;
                     case 2:
                         MENU.printGreetingPurchase();

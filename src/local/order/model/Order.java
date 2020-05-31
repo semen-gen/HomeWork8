@@ -8,24 +8,20 @@ import java.util.Map;
 
 public class Order {
 
-    private Customer customer;
+    private final Customer CUSTOMER;
     private HashMap<Integer, Product> items;
 
     public Order(Customer current) {
-        customer = current;
+        CUSTOMER = current;
         items = new HashMap<>();
     }
 
-    public HashMap<Integer, Product> getItems() {
+    public HashMap<Integer, Product> getOrderItems() {
         return items;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public Customer getOrderCustomer() {
+        return CUSTOMER;
     }
 
     public void addItem(Product item) {
@@ -36,12 +32,27 @@ public class Order {
         return items.size();
     }
 
-    public double getSum() {
+    public double getOrderSum() {
         double sum = 0;
         for (Map.Entry<Integer, Product> item : items.entrySet()) {
             sum += item.getValue().getPrice();
         }
         return sum;
+    }
+
+    public String listOrderItems() {
+        StringBuilder list = new StringBuilder();
+        for (Map.Entry<Integer, Product> item : items.entrySet()) {
+            list.append(item.getKey().toString())
+                    .append(". ")
+                    .append(item.getValue().getName())
+                    .append('\n');
+        }
+        return list.toString();
+    }
+
+    public void clearOrder() {
+        items = new HashMap<>();
     }
 
 }
