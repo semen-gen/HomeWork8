@@ -2,8 +2,8 @@ package local.store;
 
 public interface Purchasable {
 
-    String getName();
+  String getName();
 
-    double getPrice();
+  double getPrice();
 
 }
