@@ -32,4 +32,8 @@ public class Customer {
         return LOGIN;
     }
 
+    public void pay(double sum) {
+        cash -= Math.abs(sum);
+    }
+
 }

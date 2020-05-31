@@ -5,6 +5,7 @@ import local.cutomers.service.CustomerService;
 import local.exeptions.WrongProductID;
 import local.menu.model.Menu;
 import local.order.model.Order;
+import local.order.service.OrderService;
 import local.store.ProductType;
 import local.store.model.Product;
 import local.store.service.ProductService;
@@ -26,7 +27,7 @@ public class MenuService {
     private Order order;
 
     {
-        customerFile = "src\\local\\data\\customers.txt";
+        customerFile = "./res/customers.txt";
     }
 
     public MenuService(Menu menu, ProductType type) {
@@ -117,18 +118,19 @@ public class MenuService {
             String result = SCANNER.nextLine();
             checkIDForString(result);
             checkIdForBad(result);
-            if (order.count() > 0) MENU.printPaymentMenu(order, PS);
+            if (order.count() > 0) MENU.printOrderMenu(order, PS);
         }
     }
 
-    public void paymentMenu() {
+    public void orderMenu() {
         while (SCANNER.hasNext()) {
             if (SCANNER.hasNextInt()) {
                 int key = SCANNER.nextInt();
 
                 switch (key) {
                     case 1:
-                        // реализовать логику оплаты и сохранения заказа
+                        OrderService os = new OrderService(order, currentUser);
+                        os.tryPay();
                         break;
                     case 2:
                         MENU.printGreetingPurchase();

@@ -1,10 +1,10 @@
 package local.store;
 
 public enum ProductType {
-    FOOD("Еда", "src\\local\\data\\productsFood.txt"),
-    CARS("Машины", "src\\local\\data\\productsCars.txt"),
-    ANIMALS("Животные", "src\\local\\data\\productsAnimals.txt"),
-    ELECTRONICS("Электроника", "src\\local\\data\\productsElectronics.txt");
+    FOOD("Еда", "./res/productsFood.txt"),
+    CARS("Машины", "./res/productsCars.txt"),
+    ANIMALS("Животные", "./res/productsAnimals.txt"),
+    ELECTRONICS("Электроника", "./res/productsElectronics.txt");
 
     String name;
     String productFile;

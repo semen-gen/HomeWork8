@@ -46,14 +46,14 @@ public class Menu {
         MS.purchaseMenu();
     }
 
-    public void printPaymentMenu(Order order, ProductService PS) {
+    public void printOrderMenu(Order order, ProductService PS) {
         System.out.println("Товары в заказе:");
         PS.printProducts(order.getItems());
         System.out.println();
         System.out.println("Хотите продолжить покупки или оплатить?");
         System.out.println("1. Оплатить");
         System.out.println("2. Продолжить покупки");
-        MS.paymentMenu();
+        MS.orderMenu();
     }
 
 }

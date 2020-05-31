@@ -4,6 +4,7 @@ import local.cutomers.model.Customer;
 import local.store.model.Product;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
 
@@ -33,6 +34,14 @@ public class Order {
 
     public int count() {
         return items.size();
+    }
+
+    public double getSum() {
+        double sum = 0;
+        for (Map.Entry<Integer, Product> item : items.entrySet()) {
+            sum += item.getValue().getPrice();
+        }
+        return sum;
     }
 
 }
