@@ -184,6 +184,7 @@ public class MenuService {
 
   private void exit() {
     SCANNER.close();
+    CS.saveChange(currentUser);
     System.exit(0);
   }
 

@@ -36,4 +36,7 @@ public class Customer {
     cash -= Math.abs(sum);
   }
 
+  public String prepareStr() {
+    return LOGIN + "," + PASSWORD + "," + cash;
+  }
 }

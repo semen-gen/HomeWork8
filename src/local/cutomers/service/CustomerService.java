@@ -51,4 +51,24 @@ public class CustomerService {
     return data;
   }
 
+  public void saveChange(Customer currentUser) {
+    customers.replace(currentUser.getLogin(), currentUser);
+
+    String data = listCustomers();
+    try (FileWriter fr = new FileWriter(FILE)) {
+      fr.write(data);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private String listCustomers() {
+    StringBuilder builder = new StringBuilder();
+    for (HashMap.Entry<String, Customer> user : customers.entrySet()) {
+      builder.append(user.getValue().prepareStr())
+          .append('\n');
+    }
+    return builder.toString();
+  }
+
 }
